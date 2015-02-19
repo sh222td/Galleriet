@@ -4,3 +4,9 @@ P:\Galleriet\Galleriet\bin\Galleriet.dll
 P:\Galleriet\Galleriet\bin\Galleriet.pdb
 P:\Galleriet\Galleriet\obj\Debug\Galleriet.dll
 P:\Galleriet\Galleriet\obj\Debug\Galleriet.pdb
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\bin\Galleriet.dll.config
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\bin\Galleriet.dll
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\bin\Galleriet.pdb
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\obj\Debug\Galleriet.csprojResolveAssemblyReference.cache
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\obj\Debug\Galleriet.dll
+C:\Users\sh222td\Desktop\Galleriet\Galleriet\obj\Debug\Galleriet.pdb

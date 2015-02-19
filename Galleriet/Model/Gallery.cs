@@ -18,11 +18,12 @@ namespace Galleriet.Model
         static Gallery()
         {
             var invalidChars = new string(Path.GetInvalidFileNameChars());
-            PhysicalUploadImagesPath = Path.Combine(AppDomain.CurrentDomain.GetData("APPBASE").ToString(), @"Content\Images\");
-            ApprovedExtensions = new Regex(@"^.*\.(gif|jpg|png)$", RegexOptions.IgnoreCase);
             SantizePath = new Regex(string.Format("[{0}]", Regex.Escape(invalidChars)));
+            PhysicalUploadImagesPath = Path.Combine(AppDomain.CurrentDomain.GetData("APPBASE").ToString(), "Content", "Images");
+            ApprovedExtensions = new Regex(@"^.*\.(gif|jpg|png)$", RegexOptions.IgnoreCase);
         }
 
+        /* Returnerar en lista på uppladdade bilder i en sorterad ordning */
         public IEnumerable<string> GetImageNames()
         {
             var di = new DirectoryInfo(PhysicalUploadImagesPath);
@@ -45,41 +46,37 @@ namespace Galleriet.Model
 
         private bool IsValidImage(Image image)
         {
-            if (image.RawFormat.Guid == ImageFormat.Gif.Guid ||
+            /* Undersöker om bildfilen är av en godkänd MIME-typ */
+            return image.RawFormat.Guid == ImageFormat.Gif.Guid ||
                 image.RawFormat.Guid == ImageFormat.Jpeg.Guid ||
-                image.RawFormat.Guid == ImageFormat.Png.Guid) 
-            {
-                return true;
-            }
-            return false;
+                image.RawFormat.Guid == ImageFormat.Png.Guid;
         }
 
         public string SaveImage(Stream stream, string fileName)
         {
-            var image = System.Drawing.Image.FromStream(stream); // stream -> ström med bild
-            var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
+            /* Skapar och sparar en tumnagel av bilden som används av den abstrakta basklassen */
+            var image = System.Drawing.Image.FromStream(stream);
 
             if (IsValidImage(image)) 
             {
                 /* Tar bort otillåtna tecken med hjälp utav Regex variabeln SantizePath */
                 fileName = SantizePath.Replace(fileName, "");
 
-                /* Ger uppladdade bilder som redan finns ett nytt namn med hjälp utav en räknare */
+                /* Ger uppladdade bilder som redan finns ett nytt namn med hjälp utav en räknare, 
+                 * använder sig utav ett temporärt filnamn för att "nollställa" namnet om den redan innehåller en räknare */
                 int i = 2;
                 string tempFilename = fileName;
                 while (ImageExists(tempFilename)) 
                 {
-                    string name = Path.GetFileNameWithoutExtension(fileName);
-                    string ext = Path.GetExtension(fileName);
-                    tempFilename = fileName;
-                    tempFilename = name + "(" + i + ")" + ext;
-                    i++;
+                    tempFilename = Path.GetFileNameWithoutExtension(fileName) + "(" + i++ + ")" + Path.GetExtension(fileName);
                 }
                 fileName = tempFilename;
 
-                /* Sparar både image och thumbnail image i sin rätta mapp */
-                image.Save(PhysicalUploadImagesPath + fileName);
-                thumbnail.Save(Path.Combine(PhysicalUploadImagesPath, "ThumbImages/" + fileName)); // path -> fullständig fysisk filnamn inklusive sökväg
+                /* Sparar både image och thumbnail image i sin angivna mapp */
+                image.Save(Path.Combine(PhysicalUploadImagesPath, fileName));
+
+                var thumbnail = image.GetThumbnailImage(60, 45, null, System.IntPtr.Zero);
+                thumbnail.Save(Path.Combine(PhysicalUploadImagesPath, "ThumbImages", fileName));
 
                 return fileName;
             }

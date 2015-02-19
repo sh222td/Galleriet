@@ -12,22 +12,45 @@ namespace Galleriet
     public partial class Default : System.Web.UI.Page
     {
         private Gallery _gallery;
+        /* Hämtar Gallery klassen om den redan finns, annars skapas en ny */ 
         public Gallery gallery 
         {
             get { return _gallery ?? (Gallery)(_gallery = new Gallery()); }  
         }
 
+        /* Kollar om sessionen är null eller om den redan finns */
         private Boolean checkSession
         {
-            get { if ((bool)Session["sucessMessage"]) 
+            get
+            {
+                var result = Session["sucessMessage"] as bool? ?? false;
+                if (result)
+                {
+                    Session.Remove("sucessMessage");
+                }
+
+                return result;
+
+                //if (Session["sucessMessage"] == null) 
+                //{ 
+                //    return false; 
+                //}
+                
+                //if ((bool)Session["sucessMessage"]) 
+                //{ 
+                //    return true; 
+                //}
+                //return false; 
+            }
+            set 
             { 
-                return true; 
-            } return false; }
-            set { Session["sucessMessage"] = value; }
+                Session["sucessMessage"] = value; 
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            /* Hämtar ut den aktuella url:en, hämtar sedan ut filnamnet */
             string imgPath = Request.Url.ToString();
             string imgName = Path.GetFileName(imgPath);
 
@@ -36,10 +59,10 @@ namespace Galleriet
                 BigImage.ImageUrl = "~/Content/Images/" + imgName;
                 
                 PlaceholderImage.Visible = true;
-
-                if (checkSession == true)
+                if (checkSession)
                 {
-                    checkSession = false;
+                    //checkSession = false;
+                    PlaceholderMSG.Visible = true;
                 }
             }
         }
@@ -47,11 +70,11 @@ namespace Galleriet
         protected void SendButton_Click(object sender, EventArgs e)
         {
             if (IsValid)
-            { 
+            {
+                /* Gör en variabel av den uppladdade bilden och skickar vidare den till Gallery för bildhantering */
                 string file = gallery.SaveImage(FileUploadButton.PostedFile.InputStream, FileUploadButton.PostedFile.FileName);
-                PlaceholderMSG.Visible = true;
                 checkSession = true;
-                Response.Redirect("Default.aspx/" + file);
+                Response.Redirect("?name=/" + file);
             }
         }
 

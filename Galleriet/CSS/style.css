@@ -1,6 +1,12 @@
 ﻿body {
 }
 
+a {
+    width:60px;
+    background-color:black;
+    margin:auto;
+}
+
 .imgUpload {
     width:330px;
     border:1px solid grey;
@@ -14,7 +20,7 @@
 .imageListScroller {
     max-width:700px;
     max-height:70px;
-    overflow-x:scroll;
+    overflow-x:auto;
     overflow-y:hidden;
 }
 

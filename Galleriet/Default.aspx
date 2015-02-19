@@ -6,7 +6,7 @@
 <head runat="server">
     <title></title>
     <link rel="stylesheet" type="text/css" href="CSS/style.css"/>
-    <script src="Script/script.js"></script>
+    <script src="Script/script.js" type="text/javascript"></script>
 </head>
 <body>
     <form id="form" runat="server">
@@ -21,7 +21,7 @@
                 <legend>Ladda upp en bild</legend>
                 <asp:FileUpload ID="FileUploadButton" runat="server" />
                 <div class="errorMSG">
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ErrorMessage="Men kära du, välj en bild först!" ControlToValidate="FileUploadButton"></asp:RequiredFieldValidator>
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ErrorMessage="Du måste välja en bild först!" ControlToValidate="FileUploadButton"></asp:RequiredFieldValidator>
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" Display="Dynamic" ErrorMessage="Nej nej. Accepterar bara gif, jpg och png filer!" ValidationExpression="^.+(gif|GIF|jpg|JPG|png|PNG)$" ControlToValidate="FileUploadButton"></asp:RegularExpressionValidator>
                 </div>
                 <div>
@@ -52,6 +52,7 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                        <asp:HyperLink ID="HyperLinkImage" runat="server" NavigateUrl='<%#"?name=/" + Item %>' ImageUrl='<%#"~/Content/Images/ThumbImages/" + Item%>'/>
+                        
                     </ItemTemplate>
                     <FooterTemplate>
                         </div>
